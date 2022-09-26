@@ -1,8 +1,8 @@
 'use strict';
 
 const Prometheus = require('prom-client');
-require('pkginfo')(module, ['name']);
-const debug = require('debug')(module.exports.name);
+// require('pkginfo')(module, ['name']);
+// const debug = require('debug')(module.exports.name);
 const utils = require('./utils');
 const ExpressMiddleware = require('./express-middleware');
 const KoaMiddleware = require('./koa-middleware');
@@ -23,7 +23,7 @@ module.exports = (appVersion, projectName, framework = 'express') => {
             additionalLabels = [],
             extractAdditionalLabelValuesFn
         } = options;
-        debug(`Init metrics middleware with options: ${JSON.stringify(options)}`);
+        // debug(`Init metrics middleware with options: ${JSON.stringify(options)}`);
 
         setupOptions.metricsRoute = utils.validateInput({
             input: metricsPath,
