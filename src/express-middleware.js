@@ -1,6 +1,6 @@
 const Prometheus = require('prom-client');
-require('pkginfo')(module, ['name']);
-const debug = require('debug')(module.exports.name);
+// require('pkginfo')(module, ['name']);
+// const debug = require('debug')(module.exports.name);
 const utils = require('./utils');
 
 class ExpressMiddleware {
@@ -23,7 +23,7 @@ class ExpressMiddleware {
         if (this.setupOptions && this.setupOptions.server) {
             this.setupOptions.server.getConnections((error, count) => {
                 if (error) {
-                    debug('Error while collection number of open connections', error);
+                    // debug('Error while collection number of open connections', error);
                 } else {
                     this.setupOptions.numberOfConnectionsGauge.set(count);
                 }
@@ -46,7 +46,7 @@ class ExpressMiddleware {
             this.setupOptions.requestSizeHistogram.observe(labels, req.metrics.contentLength);
             req.metrics.timer(labels);
             this.setupOptions.responseSizeHistogram.observe(labels, responseLength);
-            debug(`metrics updated, request length: ${req.metrics.contentLength}, response length: ${responseLength}`);
+            // debug(`metrics updated, request length: ${req.metrics.contentLength}, response length: ${responseLength}`);
         }
     }
 
@@ -100,12 +100,12 @@ class ExpressMiddleware {
         const routeUrl = req.originalUrl || req.url;
 
         if (routeUrl === this.setupOptions.metricsRoute) {
-            debug('Request to /metrics endpoint');
+            // debug('Request to /metrics endpoint');
             res.set('Content-Type', Prometheus.register.contentType);
             return res.end(await Prometheus.register.metrics());
         }
         if (routeUrl === `${this.setupOptions.metricsRoute}.json`) {
-            debug('Request to /metrics endpoint');
+            // debug('Request to /metrics endpoint');
             return res.json(await Prometheus.register.getMetricsAsJSON());
         }
 
@@ -114,10 +114,10 @@ class ExpressMiddleware {
             contentLength: parseInt(req.get('content-length')) || 0
         };
 
-        debug(`Set start time and content length for request. url: ${routeUrl}, method: ${req.method}`);
+        // debug(`Set start time and content length for request. url: ${routeUrl}, method: ${req.method}`);
 
         res.once('finish', () => {
-            debug('on finish.');
+            // debug('on finish.');
             this._handleResponse(req, res);
         });
 

@@ -1,6 +1,6 @@
 const Prometheus = require('prom-client');
-require('pkginfo')(module, ['name']);
-const debug = require('debug')(module.exports.name);
+// require('pkginfo')(module, ['name']);
+// const debug = require('debug')(module.exports.name);
 const utils = require('./utils');
 
 const WILDCARD_ROUTE_ENDING = '(.*)';
@@ -25,7 +25,7 @@ class KoaMiddleware {
         if (this.setupOptions.server) {
             this.setupOptions.server.getConnections((error, count) => {
                 if (error) {
-                    debug('Error while collection number of open connections', error);
+                    // debug('Error while collection number of open connections', error);
                 } else {
                     this.setupOptions.numberOfConnectionsGauge.set(count);
                 }
@@ -48,7 +48,7 @@ class KoaMiddleware {
             this.setupOptions.requestSizeHistogram.observe(labels, ctx.req.metrics.contentLength);
             ctx.req.metrics.timer(labels);
             this.setupOptions.responseSizeHistogram.observe(labels, responseLength);
-            debug(`metrics updated, request length: ${ctx.req.metrics.contentLength}, response length: ${responseLength}`);
+            // debug(`metrics updated, request length: ${ctx.req.metrics.contentLength}, response length: ${responseLength}`);
         }
     }
 
@@ -114,13 +114,13 @@ class KoaMiddleware {
             this._collectDefaultServerMetrics(this.setupOptions.defaultMetricsInterval);
         }
         if (ctx.req.url === this.setupOptions.metricsRoute) {
-            debug('Request to /metrics endpoint');
+            // debug('Request to /metrics endpoint');
             ctx.set('Content-Type', Prometheus.register.contentType);
             ctx.body = await Prometheus.register.metrics();
             return next();
         }
         if (ctx.req.url === `${this.setupOptions.metricsRoute}.json`) {
-            debug('Request to /metrics endpoint');
+            // debug('Request to /metrics endpoint');
             ctx.body = await Prometheus.register.getMetricsAsJSON();
             return next();
         }
@@ -130,10 +130,10 @@ class KoaMiddleware {
             contentLength: parseInt(ctx.request.get('content-length')) || 0
         };
 
-        debug(`Set start time and content length for request. url: ${ctx.req.url}, method: ${ctx.req.method}`);
+        // debug(`Set start time and content length for request. url: ${ctx.req.url}, method: ${ctx.req.method}`);
 
         ctx.res.once('finish', () => {
-            debug('on finish.');
+            // debug('on finish.');
             this._handleResponse(ctx);
         });
 
